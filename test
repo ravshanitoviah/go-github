@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Native test entrypoint for the bounty pipeline ("Native Test Command: test").
+# Runs the full real regression suite: Go unit tests plus the Issue #4
+# Python regression harness.
+set -e
+cd "$(dirname "$0")"
+
+echo "== go test ./... =="
+go test ./...
+
+echo "== python3 -m unittest tests/test_issue_4.py =="
+python3 -m unittest tests/test_issue_4.py
+
+echo "ALL TESTS PASSED"

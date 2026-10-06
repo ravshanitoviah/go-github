@@ -1,0 +1,25 @@
+diff --git a/buffer_pool_manager.go b/buffer_pool_manager.go
+--- a/buffer_pool_manager.go
++++ b/buffer_pool_manager.go
+@@ -120,7 +120,7 @@ type Page struct {
+     isDirty bool
+     // Other fields ...
+ }
+-
++func (p *Page) DecrementPinCount() {
+     p.pinCount--
+     if p.pinCount == 0 {
+         p.evict()
+     }
+ }
+ 
+-// Other methods ...
++func (p *Page) Evict() {
++    if p.isDirty {
++        // Log or handle dirty page eviction
++        fmt.Println("Evicting dirty page")
++    }
++    p.isDirty = false
++    p.pinCount = 0
++    freeList.Put(p)
++}

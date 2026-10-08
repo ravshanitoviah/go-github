@@ -1,0 +1,21 @@
+diff --git a/buffer_pool.go b/buffer_pool.go
+index 1234567..89abcde 100644
+--- a/buffer_pool.go
++++ b/buffer_pool.go
+@@ -120,7 +120,7 @@ func (bpm *BufferPoolManager) PinPage(pageID uint64) *Page {
+ 	page := bpm.pages[pageID]
+ 	page.pin_count++
+-	if page.pin_count == 1 {
++	if page.pin_count == 1 && !page.is_dirty {
+ 		bpm.evictor.Lock()
+ 		bpm.freeList.Push(page)
+ 		bpm.evictor.Unlock()
+@@ -165,7 +165,7 @@ func (bpm *BufferPoolManager) UnpinPage(pageID uint64, dirty bool) {
+ 	page := bpm.pages[pageID]
+ 	page.pin_count--
+ 	if page.pin_count == 0 {
+-		bpm.evictor.Lock()
++		if !page.is_dirty {
+ 			bpm.evictor.Lock()
+ 			bpm.freeList.Push(page)
+ 			bpm.evictor.Unlock()

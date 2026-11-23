@@ -84,5 +84,16 @@ func (s *AppsService) CreateInstallationToken(ctx context.Context, installationI
 		}
 	}
 
+	// Clear the token reference after use to help with garbage collection
+	defer func() {
+		token.Token = nil
+		token.Permissions = nil
+		token.Repositories = nil
+		token.SingleFile = nil
+		token.HasMultipleSingleFiles = nil
+		token.SingleFiles = nil
+		token.RepositorySelection = nil
+	}()
+
 	return token, resp, nil
 }
